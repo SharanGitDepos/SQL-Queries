@@ -40,9 +40,11 @@ Employees with Id 4 is part of a team with team_id = 7.
 Employees with Id 5,6 are part of a team with team_id = 9.
 
 SOLUTION-
-Select E1.employee_id, count(E2.Row_Num) 
-FROM Employee E1
-JOIN (Select employee_id, team_id, Rank() OVER(partition by team_id order by team_id) as Row_Num
-from employee) E2
-ON E1.team_id 
-Group by E1.employee_Id
+
+select e1.employee_id , e2.team_size
+	from employee e1
+	inner join (
+			select team_id , count(*) as team_size
+			from Employee e
+			group by team_id) as e2
+		on e1.team_id=e2.team_id
